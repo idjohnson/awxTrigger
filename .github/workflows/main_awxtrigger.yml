@@ -25,6 +25,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: 'Set User and Password'
+        shell: bash
+        run: |
+          sed -i 's/USERNAMEREPLACE/${{ secrets.AWXUSER }}/g' index.js
+          sed -i 's/PASSWORDREPLACE/${{ secrets.AWXPASS }}/g' index.js
+
       - name: 'Resolve Project Dependencies Using Npm'
         shell: bash
         run: |
