@@ -2,7 +2,7 @@ const express = require('express');
 const fetch = require('node-fetch');
 
 const app = express();
-const PORT = 8080;
+const PORT = 80;
 
 // Middleware to parse JSON body
 app.use(express.json());
