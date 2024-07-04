@@ -23,8 +23,11 @@ jobs:
     - name: 'AWX Run'
       run: |
         set -x
-        curl -v -X POST -u "${{ secrets.AWXUSER }}:${{ secrets.AWXPASS }}" https://awx.freshbrewed.science/api/v2/job_templates/${{ github.event.client_payload.awxjob }}/launch/
-
+        if [[ "${{ github.event.client_payload.password }}" == "${{ secrets.FORMPASS }}" ]]; then
+           curl -v -X POST -u "${{ secrets.AWXUSER }}:${{ secrets.AWXPASS }}" https://awx.freshbrewed.science/api/v2/job_templates/${{ github.event.client_payload.awxjob }}/launch/
+        else
+           echo "WRONG PASSWORD. WILL NOT RUN"
+        fi
   run_if_failure:
     runs-on: ubuntu-latest
     needs: run_if_payload
