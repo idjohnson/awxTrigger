@@ -16,13 +16,13 @@ jobs:
         export
     - env:
         MESSAGE: ${{ github.event.client_payload.from }}
-        run: echo $MESSAGE
+      run: echo $MESSAGE
     - env:
         MESSAGE: ${{ github.event.client_payload.awxjob }}
-        run: echo $MESSAGE
+      run: echo $MESSAGE
     - name: 'AWX Run'
-        run: |
-          curl -X POST -u "${{ secrets.AWXUSER }}:${{ secrets.AWXPASS }}" https://awx.freshbrewed.science/api/v2/job_templates/${{ github.event.client_payload.awxjob }}/launch
+      run: |
+        curl -X POST -u "${{ secrets.AWXUSER }}:${{ secrets.AWXPASS }}" https://awx.freshbrewed.science/api/v2/job_templates/${{ github.event.client_payload.awxjob }}/launch
 
   run_if_failure:
     runs-on: ubuntu-latest
@@ -35,7 +35,7 @@ jobs:
         echo "JOB: ${{ github.event.client_payload.awxjob }}"
     - env:
         MESSAGE: ${{ github.event.client_payload.from }}
-        run: echo $MESSAGE
+      run: echo $MESSAGE
     - env:
         MESSAGE: ${{ github.event.client_payload.awxjob }}
-        run: echo $MESSAGE
+      run: echo $MESSAGE
