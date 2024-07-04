@@ -1,41 +1,41 @@
 on:
   repository_dispatch:
     types: [on-demand-payload]
-  
-  permissions:
-     id-token: write
-     contents: read
-  
-  jobs:
-    run_if_payload:
-      if: ${{ github.event }}
-      runs-on: ubuntu-latest
-      steps:
-        - run: |
-            set -x
-            export
-        - env:
-            MESSAGE: ${{ github.event.client_payload.from }}
-          run: echo $MESSAGE
-        - env:
-            MESSAGE: ${{ github.event.client_payload.awxjob }}
-          run: echo $MESSAGE
-        - name: 'AWX Run'
-          run: |
-             curl -X POST -u "${{ secrets.AWXUSER }}:${{ secrets.AWXPASS }}" https://awx.freshbrewed.science/api/v2/job_templates/${{ github.event.client_payload.awxjob }}/launch
-  
-    run_if_failure:
-      runs-on: ubuntu-latest
-      needs: run_if_payload
-      if: always() && (needs.run_if_payload.result == 'failure')
-      steps:
-        - run: |
-            echo "FAILED"
-            echo "FROM: ${{ github.event.client_payload.from }}"
-            echo "JOB: ${{ github.event.client_payload.awxjob }}"
-        - env:
-            MESSAGE: ${{ github.event.client_payload.from }}
-          run: echo $MESSAGE
-        - env:
-            MESSAGE: ${{ github.event.client_payload.awxjob }}
-          run: echo $MESSAGE
+
+permissions:
+    id-token: write
+    contents: read
+
+jobs:
+  run_if_payload:
+    if: ${{ github.event }}
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        set -x
+        export
+    - env:
+        MESSAGE: ${{ github.event.client_payload.from }}
+        run: echo $MESSAGE
+    - env:
+        MESSAGE: ${{ github.event.client_payload.awxjob }}
+        run: echo $MESSAGE
+    - name: 'AWX Run'
+        run: |
+          curl -X POST -u "${{ secrets.AWXUSER }}:${{ secrets.AWXPASS }}" https://awx.freshbrewed.science/api/v2/job_templates/${{ github.event.client_payload.awxjob }}/launch
+
+  run_if_failure:
+    runs-on: ubuntu-latest
+    needs: run_if_payload
+    if: always() && (needs.run_if_payload.result == 'failure')
+    steps:
+    - run: |
+        echo "FAILED"
+        echo "FROM: ${{ github.event.client_payload.from }}"
+        echo "JOB: ${{ github.event.client_payload.awxjob }}"
+    - env:
+        MESSAGE: ${{ github.event.client_payload.from }}
+        run: echo $MESSAGE
+    - env:
+        MESSAGE: ${{ github.event.client_payload.awxjob }}
+        run: echo $MESSAGE
